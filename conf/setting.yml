@@ -1,0 +1,23 @@
+mode:
+  develop: true
+
+server:
+  port: 8889
+
+db:
+  dsn: "root:123456@tcp(127.0.0.1:3306)/admin-demo?charset=utf8mb4&parseTime=True&loc=Local"
+  maxIdleConn: 10 #设置空闲连接池中的最大连接数
+  maxOpenConn: 10 #置到数据库的最大打开连接数
+
+redis:
+  host: 127.0.0.1:6379
+  password: Yjyyunwei123
+
+jwt:
+  tokenExpire: 30 #token有效时长，分钟
+  secret: admin-demo
+
+log:
+  MaxSize: 1 #日志最大尺寸(M)，超出后分割
+  MaxBackups: 10 #保留旧文件的最大个数
+  MaxAge: 30 #保留旧文件的最大天数
