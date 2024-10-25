@@ -15,7 +15,6 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
-	"time"
 )
 
 type IFnRegisterRouter = func(rgPublic *gin.RouterGroup, rgAuth *gin.RouterGroup)
@@ -78,8 +77,8 @@ func InitRouter() {
 
 	<-ctx.Done()
 	//cancelCtx()
-	ctx, cancelShutDown := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cancelShutDown()
+	//ctx, cancelShutDown := context.WithTimeout(context.Background(), 2*time.Second)
+	//defer cancelShutDown()
 	fmt.Println("===")
 	fmt.Println(<-ctx.Done())
 	fmt.Println("===111")
