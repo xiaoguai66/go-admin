@@ -10,9 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//const TableNameSysUser = "user"
-
-// SysUser mapped from table <sys_user>
+// User mapped from table <sys_user>
 type User struct {
 	ID        int32          `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键" json:"id"` // 主键
 	Name      string         `gorm:"column:name;not null" json:"name"`
@@ -22,8 +20,3 @@ type User struct {
 	UpdatedAt time.Time      `gorm:"column:updated_at" json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at" json:"deleted_at"`
 }
-
-// TableName SysUser's table name
-//func (*User) TableName() string {
-//	return TableNameSysUser
-//}
