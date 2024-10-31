@@ -33,7 +33,7 @@ func Start() {
 	a, _ := global.RedisClient.Get("a")
 	b, _ := global.RedisClient.Get("b")
 	c, _ := global.RedisClient.Get("c")
-	fmt.Printf("%#v,%#v,%#v", a, b, c)
+	fmt.Printf("redis-testing:%#v,%#v,%#v\n", a, b, c)
 
 	//初始化异常统一抛出
 	if initErr != nil {

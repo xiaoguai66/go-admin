@@ -1,4 +1,4 @@
-package dto
+package request
 
 type UserLoginDto struct {
 	Name     string `json:"name" binding:"required,first_is_a" message:"用户名错误" required_err:"用户名不能为空" first_is_a_err:"用户名以a字母开头"`

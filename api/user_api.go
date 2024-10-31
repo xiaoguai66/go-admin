@@ -1,17 +1,21 @@
 package api
 
 import (
-	"admin-demo/service/dto"
+	"admin-demo/service"
+	"admin-demo/service/request"
+	"admin-demo/utils"
 	"github.com/gin-gonic/gin"
 )
 
 type UserApi struct {
 	BaseApi
+	Service *service.UserService
 }
 
 func NewUserApi() *UserApi {
 	return &UserApi{
 		BaseApi: NewBaseApi(),
+		Service: service.NewUserService(),
 	}
 }
 
@@ -31,7 +35,7 @@ func (u UserApi) Login(ctx *gin.Context) {
 	//Ok(ctx, ResponseJson{
 	//	Msg: "Login Success",
 	//})
-	var iUserLoginDto dto.UserLoginDto
+	var iUserLoginDto request.UserLoginDto
 	//err := ctx.ShouldBind(&iUserLoginDto)
 	//if err != nil {
 	//
@@ -42,7 +46,24 @@ func (u UserApi) Login(ctx *gin.Context) {
 	}).GetError(); err != nil {
 		return
 	}
+	user, err := u.Service.Login(iUserLoginDto)
+	if err != nil {
+		u.Fail(ResponseJson{
+			Msg: err.Error(),
+		})
+		return
+	}
+	token, err := utils.GenerateToken(int(user.ID), user.Name)
+	if err != nil {
+		u.Fail(ResponseJson{
+			Msg: err.Error(),
+		})
+		return
+	}
 
-	u.Ok(ResponseJson{Data: iUserLoginDto})
+	u.Ok(ResponseJson{Data: gin.H{
+		"token": token,
+		"user":  user,
+	}})
 
 }
