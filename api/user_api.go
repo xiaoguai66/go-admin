@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	ERR_CODE_ADD_USER = 10011
+)
+
 type UserApi struct {
 	BaseApi
 	Service *service.UserService
@@ -66,4 +70,25 @@ func (u UserApi) Login(ctx *gin.Context) {
 		"user":  user,
 	}})
 
+}
+
+func (u UserApi) AddUser(ctx *gin.Context) {
+	var iUserAddDto request.UserAddDto
+	if err := u.BuildRequest(BuildRequestOption{
+		Ctx: ctx,
+		DTO: &iUserAddDto,
+	}).GetError(); err != nil {
+		return
+	}
+	err := u.Service.AddUser(&iUserAddDto)
+	if err != nil {
+		u.Fail(ResponseJson{
+			Code: ERR_CODE_ADD_USER,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	u.Ok(ResponseJson{
+		Data: iUserAddDto,
+	})
 }

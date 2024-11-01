@@ -18,6 +18,7 @@ func InitUserRouters() {
 				//})
 			}
 		}())
+		rgAuthUser.POST("", userApi.AddUser)
 		rgAuthUser.GET("", func(context *gin.Context) {
 			context.AbortWithStatusJSON(http.StatusOK, gin.H{
 				"data": []map[string]any{

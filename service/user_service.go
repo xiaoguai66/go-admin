@@ -33,3 +33,11 @@ func (u *UserService) Login(option request.UserLoginDto) (model.User, error) {
 	}
 	return user, errResult
 }
+
+func (u *UserService) AddUser(option *request.UserAddDto) error {
+	//检查用户名
+	if u.repository.CheckUserNameExist(option.Name) {
+		return errors.New("用户名已存在")
+	}
+	return u.repository.AddUser(option)
+}
