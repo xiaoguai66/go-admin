@@ -27,7 +27,7 @@ func (m *UserRepository) GetUserByNameAndPassword(name, password string) model.U
 	return userModel
 }
 
-func (m *UserRepository) AddUser(option *request.UserAddDto) error {
+func (m *UserRepository) AddUser(option *request.UserAddRequest) error {
 	var userModel = model.User{}
 	option.ConvertToModel(&userModel)
 	err := m.Orm.Save(&userModel).Error
@@ -42,4 +42,10 @@ func (m *UserRepository) CheckUserNameExist(name string) bool {
 	var total int64
 	m.Orm.Model(model.User{}).Where("name=?", name).Count(&total)
 	return total > 0
+}
+
+func (m *UserRepository) GetUserInfoById(id int32) (model.User, error) {
+	var userModel model.User
+	err := m.Orm.First(&userModel, id).Error
+	return userModel, err
 }

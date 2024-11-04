@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	ERR_CODE_ADD_USER = 10011
+	ERR_CODE_ADD_USER       = 10011
+	ERR_CODE_GET_USER_BY_ID = 10012
 )
 
 type UserApi struct {
@@ -39,18 +40,18 @@ func (u UserApi) Login(ctx *gin.Context) {
 	//Ok(ctx, ResponseJson{
 	//	Msg: "Login Success",
 	//})
-	var iUserLoginDto request.UserLoginDto
-	//err := ctx.ShouldBind(&iUserLoginDto)
+	var iUserLoginRequest request.UserLoginRequest
+	//err := ctx.ShouldBind(&iUserLoginRequest)
 	//if err != nil {
 	//
 	//}
 	if err := u.BuildRequest(BuildRequestOption{
-		Ctx: ctx,
-		DTO: &iUserLoginDto,
+		Ctx:     ctx,
+		Request: &iUserLoginRequest,
 	}).GetError(); err != nil {
 		return
 	}
-	user, err := u.Service.Login(iUserLoginDto)
+	user, err := u.Service.Login(iUserLoginRequest)
 	if err != nil {
 		u.Fail(ResponseJson{
 			Msg: err.Error(),
@@ -73,14 +74,14 @@ func (u UserApi) Login(ctx *gin.Context) {
 }
 
 func (u UserApi) AddUser(ctx *gin.Context) {
-	var iUserAddDto request.UserAddDto
+	var iUserAddRequest request.UserAddRequest
 	if err := u.BuildRequest(BuildRequestOption{
-		Ctx: ctx,
-		DTO: &iUserAddDto,
+		Ctx:     ctx,
+		Request: &iUserAddRequest,
 	}).GetError(); err != nil {
 		return
 	}
-	err := u.Service.AddUser(&iUserAddDto)
+	err := u.Service.AddUser(&iUserAddRequest)
 	if err != nil {
 		u.Fail(ResponseJson{
 			Code: ERR_CODE_ADD_USER,
@@ -89,6 +90,32 @@ func (u UserApi) AddUser(ctx *gin.Context) {
 		return
 	}
 	u.Ok(ResponseJson{
-		Data: iUserAddDto,
+		Data: iUserAddRequest,
+	})
+}
+
+func (u UserApi) GetUserList(ctx *gin.Context) {
+
+}
+
+func (u UserApi) GetUserInfo(ctx *gin.Context) {
+	var idRequest request.CommonIDRequest
+	if err := u.BuildRequest(BuildRequestOption{
+		Ctx:                ctx,
+		Request:            &idRequest,
+		BuildParamsFromUri: true,
+	}).GetError(); err != nil {
+		return
+	}
+	userModel, err := u.Service.GetUserInfoById(&idRequest)
+	if err != nil {
+		u.Fail(ResponseJson{
+			Code: ERR_CODE_GET_USER_BY_ID,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	u.Ok(ResponseJson{
+		Data: userModel,
 	})
 }

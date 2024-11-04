@@ -25,7 +25,7 @@ func NewUserService() *UserService {
 	return userService
 }
 
-func (u *UserService) Login(option request.UserLoginDto) (model.User, error) {
+func (u *UserService) Login(option request.UserLoginRequest) (model.User, error) {
 	var errResult error
 	user := u.repository.GetUserByNameAndPassword(option.Name, option.Password)
 	if user.ID == 0 {
@@ -34,10 +34,14 @@ func (u *UserService) Login(option request.UserLoginDto) (model.User, error) {
 	return user, errResult
 }
 
-func (u *UserService) AddUser(option *request.UserAddDto) error {
+func (u *UserService) AddUser(option *request.UserAddRequest) error {
 	//检查用户名
 	if u.repository.CheckUserNameExist(option.Name) {
 		return errors.New("用户名已存在")
 	}
 	return u.repository.AddUser(option)
+}
+
+func (u *UserService) GetUserInfoById(idRequest *request.CommonIDRequest) (model.User, error) {
+	return u.repository.GetUserInfoById(idRequest.ID)
 }
