@@ -45,3 +45,12 @@ func (u *UserService) AddUser(option *request.UserAddRequest) error {
 func (u *UserService) GetUserInfoById(idRequest *request.CommonIDRequest) (model.User, error) {
 	return u.repository.GetUserInfoById(idRequest.ID)
 }
+
+func (u *UserService) GetUserList(option *request.UserListRequest) ([]model.User, int64, error) {
+	return u.repository.GetUserList(option)
+}
+
+func (u *UserService) UpdateUser(option *request.UserUpdateRequest) error {
+	//重名判断
+	return u.repository.UpdateUser(option)
+}

@@ -8,8 +8,10 @@ import (
 )
 
 const (
-	ERR_CODE_ADD_USER       = 10011
-	ERR_CODE_GET_USER_BY_ID = 10012
+	ERR_CODE_ADD_USER        = 10011
+	ERR_CODE_GET_USER_BY_ID  = 10012
+	ERR_CODE_GET_USER_LIST   = 10013
+	ERR_CODE_GET_UPDATE_USER = 10014
 )
 
 type UserApi struct {
@@ -94,16 +96,12 @@ func (u UserApi) AddUser(ctx *gin.Context) {
 	})
 }
 
-func (u UserApi) GetUserList(ctx *gin.Context) {
-
-}
-
 func (u UserApi) GetUserInfo(ctx *gin.Context) {
 	var idRequest request.CommonIDRequest
 	if err := u.BuildRequest(BuildRequestOption{
-		Ctx:                ctx,
-		Request:            &idRequest,
-		BuildParamsFromUri: true,
+		Ctx:     ctx,
+		Request: &idRequest,
+		BindUri: true,
 	}).GetError(); err != nil {
 		return
 	}
@@ -118,4 +116,49 @@ func (u UserApi) GetUserInfo(ctx *gin.Context) {
 	u.Ok(ResponseJson{
 		Data: userModel,
 	})
+}
+
+func (u UserApi) GetUserList(ctx *gin.Context) {
+	var userListRequest request.UserListRequest
+	if err := u.BuildRequest(BuildRequestOption{
+		Ctx:     ctx,
+		Request: &userListRequest,
+		BindUri: true,
+	}).GetError(); err != nil {
+		return
+	}
+	list, total, err := u.Service.GetUserList(&userListRequest)
+	if err != nil {
+		u.Fail(ResponseJson{
+			Code: ERR_CODE_GET_USER_LIST,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	returnPage := make(map[string]any)
+	returnPage["list"] = list
+	returnPage["total"] = total
+	u.Ok(ResponseJson{
+		Data: returnPage,
+	})
+}
+
+func (u UserApi) UpdateUser(ctx *gin.Context) {
+	var userUpdateRequest request.UserUpdateRequest
+	if err := u.BuildRequest(BuildRequestOption{
+		Ctx:     ctx,
+		Request: &userUpdateRequest,
+		BindAll: true,
+	}).GetError(); err != nil {
+		return
+	}
+	err := u.Service.UpdateUser(&userUpdateRequest)
+	if err != nil {
+		u.Fail(ResponseJson{
+			Code: ERR_CODE_GET_UPDATE_USER,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	u.Ok(ResponseJson{})
 }

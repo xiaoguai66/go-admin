@@ -20,5 +20,6 @@ func InitUserRouters() {
 		rgAuthUser.POST("", userApi.AddUser)
 		rgAuthUser.GET("", userApi.GetUserList)
 		rgAuthUser.GET("/:id", userApi.GetUserInfo)
+		rgAuthUser.PUT("/:id", userApi.UpdateUser)
 	})
 }

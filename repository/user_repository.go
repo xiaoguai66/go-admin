@@ -49,3 +49,20 @@ func (m *UserRepository) GetUserInfoById(id int32) (model.User, error) {
 	err := m.Orm.First(&userModel, id).Error
 	return userModel, err
 }
+
+func (m *UserRepository) GetUserList(option *request.UserListRequest) ([]model.User, int64, error) {
+	var userList []model.User
+	var total int64
+	err := m.Orm.Model(&model.User{}).
+		Scopes(Paginage(option.Paginate)).Find(&userList).
+		Offset(-1).Limit(-1).Count(&total).Error
+	return userList, total, err
+}
+
+func (m *UserRepository) UpdateUser(option *request.UserUpdateRequest) error {
+	var user model.User
+	m.Orm.First(&user, option.ID)
+	option.ConvertToModel(&user)
+
+	return m.Orm.Save(&user).Error
+}
