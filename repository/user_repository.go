@@ -66,3 +66,7 @@ func (m *UserRepository) UpdateUser(option *request.UserUpdateRequest) error {
 
 	return m.Orm.Save(&user).Error
 }
+
+func (m *UserRepository) DeleteUserById(id int32) error {
+	return m.Orm.Delete(&model.User{}, id).Error
+}

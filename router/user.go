@@ -21,5 +21,6 @@ func InitUserRouters() {
 		rgAuthUser.GET("", userApi.GetUserList)
 		rgAuthUser.GET("/:id", userApi.GetUserInfo)
 		rgAuthUser.PUT("/:id", userApi.UpdateUser)
+		rgAuthUser.DELETE("/:id", userApi.DeleteUserById)
 	})
 }

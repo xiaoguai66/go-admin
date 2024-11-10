@@ -54,3 +54,7 @@ func (u *UserService) UpdateUser(option *request.UserUpdateRequest) error {
 	//重名判断
 	return u.repository.UpdateUser(option)
 }
+
+func (u *UserService) DeleteUserById(option *request.CommonIDRequest) error {
+	return u.repository.DeleteUserById(option.ID)
+}

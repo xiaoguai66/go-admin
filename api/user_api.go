@@ -8,10 +8,11 @@ import (
 )
 
 const (
-	ERR_CODE_ADD_USER        = 10011
-	ERR_CODE_GET_USER_BY_ID  = 10012
-	ERR_CODE_GET_USER_LIST   = 10013
-	ERR_CODE_GET_UPDATE_USER = 10014
+	ERR_CODE_ADD_USER       = 10011
+	ERR_CODE_GET_USER_BY_ID = 10012
+	ERR_CODE_GET_USER_LIST  = 10013
+	ERR_CODE_UPDATE_USER    = 10014
+	ERR_CODE_DELETE_USER    = 10015
 )
 
 type UserApi struct {
@@ -155,10 +156,32 @@ func (u UserApi) UpdateUser(ctx *gin.Context) {
 	err := u.Service.UpdateUser(&userUpdateRequest)
 	if err != nil {
 		u.Fail(ResponseJson{
-			Code: ERR_CODE_GET_UPDATE_USER,
+			Code: ERR_CODE_UPDATE_USER,
 			Msg:  err.Error(),
 		})
 		return
 	}
 	u.Ok(ResponseJson{})
+}
+
+func (u UserApi) DeleteUserById(ctx *gin.Context) {
+	var commonIDRequestRequest request.CommonIDRequest
+	if err := u.BuildRequest(BuildRequestOption{
+		Ctx:     ctx,
+		Request: &commonIDRequestRequest,
+		BindUri: true,
+	}).GetError(); err != nil {
+		return
+	}
+	err := u.Service.DeleteUserById(&commonIDRequestRequest)
+	if err != nil {
+		u.Fail(ResponseJson{
+			Code: ERR_CODE_DELETE_USER,
+			Msg:  err.Error(),
+		})
+		return
+	}
+	u.Ok(ResponseJson{
+		Code: 200,
+	})
 }
